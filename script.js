@@ -1,12 +1,36 @@
 const menuBtn = document.getElementById("menuBtn");
 const navLinks = document.getElementById("navLinks");
 
+function closeMenu() {
+  navLinks.classList.remove("open");
+  menuBtn.setAttribute("aria-expanded", "false");
+  menuBtn.setAttribute("aria-label", "Open menu");
+}
+
+menuBtn.setAttribute("aria-expanded", "false");
+
 menuBtn.addEventListener("click", () => {
-  navLinks.classList.toggle("open");
+  const isOpen = navLinks.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", String(isOpen));
+  menuBtn.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
 });
 
 document.querySelectorAll("#navLinks a").forEach(link => {
-  link.addEventListener("click", () => navLinks.classList.remove("open"));
+  link.addEventListener("click", closeMenu);
+});
+
+document.addEventListener("click", event => {
+  if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
+    closeMenu();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeMenu();
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 700) closeMenu();
 });
 
 // Typing animation
